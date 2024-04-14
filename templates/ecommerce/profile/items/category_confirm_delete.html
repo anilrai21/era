@@ -1,0 +1,18 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+
+{% block right_content %}
+  <div class="columns">
+    <div class="column is-half is-offset-one-quarter">
+      <form method="post">
+        <input
+          type="hidden"
+          name="csrfmiddlewaretoken"
+          value="{{ csrf_token }}"
+        >
+        <p>Are you sure you want to delete {{ object }}?</p>
+        <input class="button is-danger" type="submit" value="Confirm">
+      </form>
+    </div>
+  </div>
+{% endblock right_content %}

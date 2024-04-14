@@ -1,0 +1,12 @@
+<div>
+    <select name="category" class="category-selection-button">
+        <option value="all">
+            All
+        </option>
+        {% for category in ITEM_CATEGORIES %}
+            <option value={{ category.alias }} {% if category.name == searched_category %} selected="selected" {% endif %}>
+                {{ category.name }}
+            </option>
+        {% endfor %}
+     </select>
+</div>

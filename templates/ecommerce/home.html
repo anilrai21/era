@@ -1,0 +1,117 @@
+{% extends "ecommerce/base.html" %}
+
+{% block content %}
+  <article class="container">
+    <div id="carousel">
+      <div>
+        <img class="carousel_image" v-bind:src="[[ imageUrl ]]">
+        <a class="prev_button" v-on:click="prevImage()">
+          <img style="height: 1rem; width: 100%" src="{{ static('images/left-arrow.svg') }}">
+        </a>
+        <a class="next_button"  v-on:click="nextImage()">
+          <img style="height: 1rem; width: 100%" src="{{ static('images/right-arrow.svg') }}">
+        </a>
+      </div>
+
+    </div>
+
+    {% for image in carousel_data %}
+
+    {% endfor %}
+
+    {% if latest_items %}
+      <div class="columns">
+        <div class="column is-full">
+          <h2 style="text-align: center">Our Products</h2>
+        </div>
+      </div>
+      <hr>
+      <div class="columns">
+        <div class="column">
+          <a
+            class=""
+            href="{{ url('shop:item_list_view') }}?product-type=decoration"
+          >
+            <img class="home_card" src="/static/images/decoration.svg">
+          </a>
+        </div>
+        <div class="column">
+          <a
+            class=""
+            href="{{ url('shop:item_list_view') }}?product-type=tshirt"
+          >
+            <img class="home_card" src="/static/images/tshirt.svg">
+          </a>
+        </div>
+        <div class="column">
+          <a
+            class=""
+            href="{{ url('shop:item_list_view') }}?product-type=phone-case"
+          >
+            <img class="home_card" src="/static/images/phone-case.svg">
+          </a>
+        </div>
+      </div>
+    {% endif %}
+
+  </article>
+
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    "use strict";
+
+    new Vue({
+      el: '#carousel',
+      delimiters: ["[[","]]"],
+      data: {
+        imageList: [],
+        imageUrl: "",
+        index: 0,
+      },
+      mounted () {
+        this.setInitialImage();
+      },
+      methods: {
+        setInitialImage: function () {
+          axios.get("/api/cms/carousel-image/")
+            .then((response) => {
+              this.imageList = response.data.results.map((data) => (data.image));
+
+              console.log("this", this.imageList)
+
+
+              {#return response.json().data;#}
+            })
+            .then(() => {
+
+              if (this.imageList && this.imageList.length > 0)
+                console.log("THAT", this.imageList[0])
+                this.imageUrl = this.imageList[0]
+            })
+        },
+        nextImage: function () {
+          const currentIndex = this.index;
+
+          this.index = (currentIndex + 1) % this.imageList.length;
+          this.imageUrl = this.imageList[this.index];
+          console.log("NEXT")
+          console.log(this.index);
+        },
+        prevImage: function () {
+          const currentIndex = this.index;
+
+          if (currentIndex === 0)
+            this.index = this.imageList.length - 1;
+          else
+            this.index = currentIndex - 1;
+          this.imageUrl = this.imageList[this.index];
+          console.log("PREV");
+          console.log(this.index);
+        }
+      }
+    })
+  </script>
+{% endblock js %}

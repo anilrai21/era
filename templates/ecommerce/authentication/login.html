@@ -1,0 +1,58 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block title %}
+  Login | Kipa Prints
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter">
+        <form class="form" method="post" style="background-color: #0088d1">
+          <h2>Login</h2>
+          {% if form.errors %}
+            <div class="callout alert-callout-border alert">
+              <p>
+                Your username and password didn't match.
+                Please try again.
+              </p>
+            </div>
+          {% endif %}
+
+          {% if next %}
+            {% if user.is_authenticated %}
+              <p>
+                Your account doesn't have access to this page.
+                To proceed, please login with an account that has
+                access.
+              </p>
+            {% else %}
+              <p>
+                Please login to see this page.
+              </p>
+            {% endif %}
+          {% endif %}
+          <input type="hidden" name="csrfmiddlewaretoken"
+               value="{{ csrf_token }}">
+
+          <div>
+            Username:
+            {{ form.username }}
+          </div>
+          <div>
+            Password:
+            {{ form.password }}
+          </div>
+
+          <button
+              style="margin-top: 1rem;"
+              type="submit"
+              class="button is-primary"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

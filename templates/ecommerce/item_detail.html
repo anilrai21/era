@@ -1,0 +1,60 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block content %}
+  <div id="itemDetail" class="container">
+    <h4>{{ item.name }}</h4>
+    <div class="grid-x">
+      <div class="cell small-6 medium-6 large-6 p-1">
+        <img v-if="[[ imageUrl ]] != ''" v-bind:src="'/media/' + [[ imageUrl ]]" class="itemDetailImage">
+        <div v-else >
+          <img class="itemDetailImage" src="{{ item.main_image_url() }}">
+        </div>
+      </div>
+      <div class="columns is-mobile">
+        {% for image in item.images.all() %}
+          <div class="column is-4">
+            <img
+              class=" card_small_image "
+              src="/media/{{ image.image }}"
+              v-on:click="setImage('{{ image.image }}')"
+            >
+          </div>
+        {% endfor %}
+      </div>
+      <div class="cell small-6 medium-6 large-6 p-1">
+        <div>
+          SKU - {{ item.sku }}
+        </div>
+        <div>
+          Rs. {{ item.current_price() }}
+        </div>
+        <div>
+          {{ item.description }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block js %}
+
+<script>
+  "use strict";
+
+  new Vue({
+    el: '#itemDetail',
+    delimiters: ["[[","]]"],
+    data: {
+      imageUrl: ""
+    },
+    methods: {
+      setImage: function(image) {
+        console.log(image);
+        this.imageUrl = image;
+      }
+    },
+  });
+
+</script>
+{% endblock js %}

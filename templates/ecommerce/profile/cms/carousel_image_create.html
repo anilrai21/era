@@ -1,0 +1,31 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block right_content %}
+  <div>
+    <div class="">
+      <h4 class="title">Add Carousel Image</h4>
+
+      <div class="form_card">
+        <form method="post" action="" enctype="multipart/form-data">
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+          <section class="modal-card-body">
+            <div class="field">
+              <div class="control">
+                <label class="">Image</label>
+                {{ form.image }}
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <label class="">Order</label>
+                {{ form.order }}
+              </div>
+            </div>
+            <input type="submit" class="button is-primary" value="Add">
+          </section>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,318 @@
+@charset "utf-8";
+@import "./bulma.sass";
+
+$top-bar-color: #000000;
+$dark-top-bar-color: #333333;
+$light-basic-card-color: #666666;
+$light-text-color: white;
+$light-payment-card-color: #ffe9ec;
+$active-colour: lightseagreen;
+
+//$top-bar-color: #FFBD4A;
+//$dark-top-bar-color: #E5AA42;
+//$light-basic-card-color: #ffe699;
+//$light-payment-card-color: #ffe9ec;
+//$active-colour: lightseagreen;
+
+html, body {
+  height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Righteous';
+}
+
+input {
+    @extend .input;
+}
+
+.form {
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+    input {
+        margin-bottom: 1rem;
+    }
+}
+
+#carousel {
+    position: relative;
+
+    .carousel_image {
+        width: 100%;
+        height: auto;
+    }
+    .prev_button {
+        position: absolute;
+        top: 50%;
+        left: 7%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        background-color: #888;
+        color: white;
+        font-size: 16px;
+        padding: 12px 24px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+    }
+    .next_button {
+        position: absolute;
+        top: 50%;
+        left: 93%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        background-color: #888;
+        color: white;
+        font-size: 16px;
+        padding: 12px 24px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+    }
+}
+
+.content_wrapper {
+    flex: 1 0 auto;
+}
+
+.content_padding {
+    height: 2rem;
+}
+
+.content {
+    padding: 1rem;
+}
+
+.navbar {
+    background-color: $top-bar-color;
+    a {
+        background-color: $top-bar-color;
+        color: white;
+        &:hover {
+            background-color: $dark-top-bar-color;
+            color: white;
+            text-decoration: none;
+        }
+    }
+}
+
+.kipa-navbar {
+    background-color: $top-bar-color;
+    a {
+        background-color: $top-bar-color;
+        color: white;
+        &:hover {
+            background-color: $dark-top-bar-color;
+            color: white;
+            text-decoration: none;
+        }
+    }
+}
+
+//.kipa-navbar-start {
+//    background-color: $top-bar-color;
+//
+//    a {
+//        background-color: $top-bar-color;
+//        color: black;
+//        &:hover {
+//            background-color: $dark-top-bar-color;
+//            color: black;
+//            text-decoration: none;
+//        }
+//    }
+//}
+
+.kipa-navbar-item {
+    background-color: $top-bar-color;
+    color: white;
+
+    a.kipa-navbar-link {
+        @extend .navbar-link;
+
+        background-color: $top-bar-color;
+        color: white;
+
+        &:hover {
+            background-color: $dark-top-bar-color;
+            color: white;
+            //text-decoration: none;
+        }
+    }
+}
+
+.kipa-navbar-dropdown {
+    @extend .navbar-dropdown;
+
+    background-color: $top-bar-color;
+
+    a.kipa-navbar-item-link {
+        @extend .navbar-item;
+
+        background-color: $top-bar-color;
+        color: white;
+
+        &:hover {
+            background-color: $dark-top-bar-color;
+            color: white;
+            text-decoration: none;
+        }
+    }
+}
+
+.cartImage {
+    height: 5rem;
+    padding-bottom: 0.5rem;
+}
+
+.cartTotalDetail {
+    margin-bottom: 2rem;
+}
+
+/* FOOTER START */
+.footer {
+    flex-shrink: 0;
+    height: 20rem;
+    color: white;
+
+    .column {
+        text-align: center;
+    }
+
+    .footer_link {
+        color: white;
+    }
+
+    .footer_link:hover {
+        color: grey;
+    }
+
+}
+
+/* FOOTER END */
+
+.carousel_image_table {
+    @extend .table;
+    border-radius: 0.5rem;
+
+    thead {
+        background-color: $light-basic-card-color;
+    }
+
+    td {
+        background-color: $light-payment-card-color;
+        height: 5rem;
+    }
+}
+
+.form_card {
+    background-color: $light-basic-card-color;
+    border-radius: 0.5rem;
+}
+
+.active_text {
+    color: $active-colour;
+}
+
+.not_active_text {
+    color: grey;
+}
+
+.profile_base {
+    padding: 2rem;
+}
+
+.profile_menu {
+    text-decoration: none;
+}
+
+.kipa_card {
+    @extend .card;
+
+    padding-top: 1.5rem;
+    border-radius: 0.5rem;
+    background-color: $light-basic-card-color;
+
+    p {
+        color: white;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
+
+.home_card {
+    background-color: $light-basic-card-color;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.card_small_image {
+    border-radius: 0.2rem;
+    border: 0.05rem black solid;
+    width: 100%;
+    /* Firefox */
+    display: -moz-box;
+    -moz-box-pack: center;
+    -moz-box-align: center;
+    /* Safari and Chrome */
+    display: -webkit-box;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    /* W3C */
+    display: box;
+    box-pack: center;
+    box-align: center;
+}
+
+//.inner_card_small_image {
+//    width: 100%;
+//}
+
+.itemDetailImage {
+    width: 100%;
+    border-radius: 1rem;
+}
+
+.selected_item {
+    background-color: lightseagreen;
+}
+
+
+.help_text {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: grey;
+    color: white
+}
+
+.order_table {
+    border-radius: 0.5rem;
+    background-color: lightgrey;
+
+    thead {
+        th {
+            background-color: grey;
+        }
+        th:first-child {
+            border-radius:0.5rem 0 0 0;
+
+        }
+
+        th:last-child{
+          border-radius: 0 0.5rem 0 0;
+        }
+    }
+
+    .order_table_bold {
+        font-weight: bolder;
+    }
+}
+

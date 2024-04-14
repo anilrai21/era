@@ -1,0 +1,60 @@
+<nav class="pagination" role="navigation" aria-label="Pagination">
+  {% if items.has_previous() %}
+    <div>
+      <a
+          class="pagination-previous"
+          href="{{ query_params }}{{ items.previous_page_number() }}"
+          aria-label=""
+      >
+        Prev
+      </a>
+    </div>
+  {% else %}
+    <div class="disabled">
+      <span class="pagination-previous" disabled>Prev page</span>
+    </div>
+  {% endif %}
+
+  <div class="pagination-list">
+    {% if num_pages <= 5 %}
+      {% for page in range(num_pages) %}
+        {% if items.number == loop.index %}
+          <div class="">
+            <a
+                class="pagination-link"
+                style="background-color: lightseagreen; color: black;"
+                disabled
+            >
+              {{ loop.index }}
+            </a>
+          </div>
+        {% else %}
+          <div>
+            <a
+                class="pagination-link"
+                href="{{ query_params }}{{ loop.index }}"
+                aria-label=""
+            >
+              {{ loop.index }}
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  {% if items.has_next() %}
+    <div>
+      <a
+          class="pagination-next"
+          href="{{ query_params }}{{ items.next_page_number() }}"
+          aria-label=""
+      >Next
+      </a>
+    </div>
+  {% else %}
+    <div class="disabled">
+      <span class="pagination-next" disabled>Next page</span>
+    </div>
+  {% endif %}
+</nav>

@@ -1,0 +1,38 @@
+{% extends 'ecommerce/profile/base.html' %}
+
+{% block staff_profile_content %}
+  <article>
+    <div class="columns">
+      <div class="column is-one-fifth">
+        <aside class="menu">
+          <p class="menu-label">Profile</p>
+          <div class="menu-list profile_menu">
+            <a {% if selector_name == "profile_home" %} class="selected_item" {% endif %} href="{{ url('profile:profile_view') }}">
+              Home
+            </a>
+          </div>
+          {% if user and user.is_staff and user.is_superuser %}
+            {% include 'ecommerce/profile/included/admin_links.html' %}
+          {% else %}
+{#            <li>#}
+{#              <a {% if selector_name == "purchased_items" %} class="selected_item" {% endif %} href="{{ url('profile:purchased_items_view') }}">#}
+{#                Purchased Items#}
+{#              </a>#}
+{#            </li>#}
+          {% endif %}
+        </aside>
+      </div>
+
+      <div class="column">
+        <div class="profile_right">
+          {% block right_content %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </article>
+{% endblock %}
+
+{% block customer_profile_content %}
+
+{% endblock %}

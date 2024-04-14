@@ -1,0 +1,21 @@
+<h5>Item Details</h5>
+<div>Total Price - {{ customer_order.total_price }}</div>
+{% for order_item in customer_order.customerorderitem_set.all() %}
+    <div>{{ order_item.item.name }}</div>
+{% endfor %}
+
+<h5>Your Details</h5>
+<div>{{ customer_order.customer.first_name }} {{ customer_order.customer.last_name }}</div>
+<div>{{ customer_order.customer.email }}</div>
+<div>{{ customer_order.customer.phone_number }}</div>
+
+<h5>Your Address</h5>
+<div>{{ customer_order.address.address1 }}</div>
+<div>{{ customer_order.address.address2 }}</div>
+<div>{{ customer_order.address.city }}</div>
+<div>{{ customer_order.address.province }}</div>
+<form method="post" action="{{ url('shop:confirm_message_place_order_view') }}">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    <input type="hidden" name="confirm_order_id" value="{{ customer_order.id }}">
+    <button class="button is-primary">Confirm</button>
+</form>

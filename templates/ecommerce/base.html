@@ -1,0 +1,88 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {% block title %}Kipa Prints{% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/dist/css/bulma-extensions.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Righteous' rel='stylesheet'>
+
+    <!-- optional CDN for Foundation Icons ^^ -->
+    <link rel="stylesheet" href="{{ static('bulma/css/style.min.css') }}">
+    {% block css %}{% endblock %}
+  </head>
+  <body>
+    <div class="content_wrapper">
+      <div>
+        {% include 'ecommerce/included/navbar.html' %}
+
+        <div id="itemAddedMessage" style="position: absolute; display: none;">
+          <div class="notification is-primary" style="z-index: 5; margin: 1rem;">
+            Item added
+          </div>
+        </div>
+
+        <div class="content_padding"></div>
+        <div class="content">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+      <div class="push"></div>
+    </div>
+
+    {% include 'ecommerce/included/footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/dist/js/bulma-extensions.min.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-2195009-2', 'auto');
+      ga('send', 'pageview');
+
+      ga('create', 'UA-2195009-27', 'auto', {name: "foundation"});
+      ga('foundation.send', 'pageview');
+
+      document.addEventListener('DOMContentLoaded', function () {
+
+      // Get all "navbar-burger" elements
+      let navbarBurgers = Array.prototype.slice.call(
+        document.querySelectorAll('.navbar-burger'), 0);
+
+        // Check if there are any navbar burgers
+        if (navbarBurgers.length > 0) {
+          // Add a click event on each of them
+          navbarBurgers.forEach(function (element) {
+            console.log("ELEMENT", element);
+
+            element.addEventListener('click', function () {
+              // Get the target from the "data-target" attribute
+              let target = element.dataset.target;
+
+              let targetElement = document.getElementById(target);
+
+              // Toggle the class on both the "navbar-burger" and the "navbar-menu"
+              element.classList.toggle('is-active');
+              targetElement.classList.toggle('is-active');
+            });
+          });
+        }
+      });
+    </script>
+
+    <script src="{{ static('js/index.js') }}"></script>
+
+    {% include 'ecommerce/included/javascript/local_storage.html' %}
+
+    {% block js %}
+    {% endblock js %}
+  </body>
+</html>

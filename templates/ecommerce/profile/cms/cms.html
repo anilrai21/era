@@ -1,0 +1,176 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+
+{% block right_content %}
+  <div class="grid-x" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+     xmlns:v-on="http://www.w3.org/1999/xhtml">
+
+    <div class="">
+      <h4 class="title">Website Design</h4>
+
+      <div id="carousel">
+        <div class="columns is-mobile">
+          <div class="column">
+            <h5 class="title">Carousel Images</h5>
+          </div>
+
+          <div class="column">
+            <a
+                class="button is-primary"
+                href="{{ url('cms:carousel_image_create_view') }}"
+            >
+              Add Carousel Image
+            </a>
+          </div>
+        </div>
+
+        <table class="carousel_image_table">
+          <thead>
+            <th>
+               Image
+            </th>
+            <th>
+               Order
+            </th>
+            <th>
+               Action
+            </th>
+          </thead>
+          <tbody>
+            <tr v-for="image in carouselImages" :key="image.alias">
+              <td>
+                <img v-bind:src="image.image" alt="">
+              </td>
+              <td>
+                [[ image.order ]]
+              </td>
+              <td>
+{#                <button class="button is-info" v-on:click="changeOrder(image.pk, 100)">Update</button>#}
+                <button class="button is-danger" v-on:click="deleteCarouselImage(image.pk)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block js %}
+  {% include 'ecommerce/included/javascript/axios.html' %}
+
+  <script>
+    "use strict"
+
+    const app = new Vue({
+      el: '#carousel',
+      delimiters: ["[[","]]"],
+      data: {
+        carouselImages: [],
+        imageOrder: 0,
+        image: "results",
+      },
+      mounted () {
+        this.getCarouselImages();
+      },
+      methods: {
+        getCarouselImages: function () {
+          axios.get('/api/cms/carousel-image/')
+            .then((response) => {
+              this.carouselImages = response.data.results;
+              console.log(response.data.results);
+            })
+        },
+        addCarouselImage: function () {
+          const csrfToken = getCookie('csrftoken');
+
+          let data = {
+            order: order
+          }
+
+          let config = {
+            headers: {
+            "X-CSRFToken": csrfToken
+            }
+          };
+
+          axios.post(`/api/cms/carousel-image/`, data, config)
+            .then((response) => {
+              console.log(response.data)
+            })
+        },
+        changeOrder: function (id, order) {
+          const csrfToken = getCookie('csrftoken');
+
+          let data = {
+            order: order
+          }
+
+          let config = {
+            headers: {
+            "X-CSRFToken": csrfToken
+            }
+          };
+
+          axios.patch(`/api/cms/carousel-image/${id}/`, data, config)
+            .then((response) => {
+              console.log(response.data)
+            })
+        },
+        deleteCarouselImage: function (id) {
+          const csrfToken = getCookie('csrftoken');
+
+          let config = {
+            headers: {
+              "X-CSRFToken": csrfToken
+            }
+          };
+
+          axios.delete(`/api/cms/carousel-image/${id}/`, config)
+            .then((response) => {
+              this.getCarouselImages()
+            })
+        },
+        /*addCarouselImageIfValid: function (e) {
+          e.preventDefault();
+
+          const csrfToken = getCookie('csrftoken');
+
+          let data = {
+            order: this.imageOrder,
+            image: this.image
+          }
+
+          let config = {
+            headers: {
+              "X-CSRFToken": csrfToken
+            }
+          };
+
+          axios.post(`/api/cms/carousel-image/`, data, config)
+            .then((response) => {
+              console.log(response.data)
+            })
+        },
+        onFileChange(e) {
+          let files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+          return;
+          this.createImage(files[0]);
+        },
+        createImage(file) {
+          var image = new Image();
+          var reader = new FileReader();
+          var vm = this;
+
+          reader.onload = (e) => {
+            vm.image = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        },
+        */
+      },
+    })
+  </script>
+{% endblock js %}

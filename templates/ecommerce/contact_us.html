@@ -1,0 +1,92 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block title %}Contact Us | Kipa Prints{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter">
+        {% if contact_form %}
+          <form class="form" method="post" style="background-color: #0088d1">
+            <h2>Contact Us</h2>
+
+            {% if messages %}
+              <div class="grid-x">
+                <div class="cell">
+                  {% for message in messages %}
+                    <div class="callout alert-callout-border alert">
+                    {{ message }}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+            Email:
+            {{ contact_form.email }}
+
+            Subject:
+            {{ contact_form.subject }}
+
+            Message:
+            {{ contact_form.message }}
+
+            <div style="margin-top: 1rem">
+              {{ contact_form.captcha }}
+            </div>
+
+            <div style="margin-top: 1rem;">
+              <button type="submit" class="button is-primary">
+                Submit
+              </button>
+
+              <button class="button is-link captcha-refresh">
+                Refresh Captcha
+              </button>
+            </div>
+          </form>
+        {% else %}
+          {% if messages %}
+            <div style="height: 8rem">
+            </div>
+            <div class="grid-x">
+              <div class="cell">
+                {% for message in messages %}
+                  <div class="callout alert-callout-border primary">
+                  {{ message }}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script>
+    $(document).ready(function () {
+      // Add refresh button after field (this can be done in the template as well)
+      $('img.captcha').after(
+        $('<a href="#void" class="captcha-refresh"><i class="fa fa-refresh"></i></a>')
+      );
+
+      // Click-handler for the refresh-link
+      $('.captcha-refresh').click(function () {
+        let $form = $(this).parents('form');
+        let url = location.protocol + "//" + window.location.hostname + ":"
+          + location.port + "/captcha/refresh/";
+
+        // Make the AJAX-call
+        $.getJSON(url, {}, function (json) {
+          $form.find('input[name="captcha_0"]').val(json.key);
+          $form.find('img.captcha').attr('src', json.image_url);
+        });
+        return false;
+      });
+    });
+  </script>
+{% endblock %}

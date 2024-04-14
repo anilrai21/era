@@ -1,0 +1,174 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block right_content %}
+  <div class="columns is-mobile">
+    <div class="column">
+      <h3
+          data-tooltip
+          tabindex="1"
+          title="Every item belong to a category and all items in the same
+          category have same properties"
+          data-position="right"
+          data-alignment="top"
+      >
+        Category
+      </h3>
+    </div>
+
+    <div class="column">
+      <a
+          class="button is-primary"
+          href="{{ url('profile:profile_category_create_view') }}"
+      >
+        Add
+      </a>
+    </div>
+  </div>
+
+  <div id="categoryTable" class="" style="margin-top: 2rem">
+    <div class="columns">
+      <div class="column">
+        <div class="field">
+          <div class="control">
+            <input
+                class="input is-primary"
+                type="text"
+                placeholder="Search"
+                v-model="searchTerm"
+            >
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <button class="button" v-on:click="fetchDataFromSearch(searchTerm)">
+          Search
+        </button>
+      </div>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Active Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="datum in tableData" :key="datum.alias">
+          <td>
+            <a v-bind:href="'/profile/category/' + [[ datum.alias ]]">[[ datum.name ]]</a>
+          </td>
+          <td>
+            <div v-if="datum.active === true" class="active_text">
+              Active
+            </div>
+            <div v-else class="not_active_text">
+              Not Active
+            </div>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <nav class="pagination" role="navigation" aria-label="pagination">
+      <div v-if="previous" class="active_text">
+        <button
+            class="button pagination-previous"
+            v-on:click="fetchData(previous)"
+        >
+          Previous
+        </button>
+      </div>
+      <div v-else >
+        <button class="button pagination-previous" disabled>Previous</button>
+      </div>
+
+      <div v-if="next" class="active_text">
+        <button
+            class="button pagination-next"
+            v-on:click="fetchData(next)"
+        >
+          Next
+        </button>
+      </div>
+      <div v-else>
+        <button class="button pagination-next" disabled>Next</button>
+      </div>
+
+      <div class="pagination-list">
+        <div v-for="n in numberOfPages">
+          <button
+              v-if="page !== n"
+              class="pagination-link"
+              :aria-label="'Go to page' + n"
+              v-on:click="fetchDataForPage(n)"
+          >
+            [[ n ]]
+          </button>
+          <button
+              v-else
+              class="pagination-link"
+              style="background-color: lightseagreen; color: black;"
+              disabled
+          >
+            [[ n ]]
+          </button>
+        </div>
+      </div>
+    </nav>
+
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  {% include 'ecommerce/included/data_table_css_block.html' %}
+  {% include 'ecommerce/included/data_table_js_block.html' %}
+
+  <script>
+    "use strict";
+
+    const categoryTable = new Vue({
+      el: '#categoryTable',
+      delimiters: ["[[","]]"],
+      data: {
+        url: "/api/shop/category",
+        tableData: [],
+        previous: undefined,
+        next: undefined,
+        numberOfPages: 1,
+        page: 1,
+        searchTerm: "",
+      },
+      mounted () {
+        this.fetchData(this.url)
+      },
+      methods: {
+        fetchData: function (url) {
+          axios.get(url)
+            .then((response) => {
+              this.tableData = response?.data?.results || [];
+              this.previous = response?.data?.previous;
+              this.next = response?.data?.next;
+              this.numberOfPages = Math.ceil(response?.data?.count / 10);
+            })
+        },
+        fetchDataForPage: function (page) {
+          this.page = page;
+          const url = `${this.url}?limit=10&offset=${10 * (page - 1)}&search=${this.searchTerm}`;
+          this.fetchData(url);
+        },
+        fetchDataFromSearch: function (searchTerm) {
+          this.searchTerm = searchTerm;
+          this.page = 1;
+          const url = `${this.url}?search=${this.searchTerm}`
+          this.fetchData(url);
+        }
+      }
+    })
+
+  </script>
+{% endblock %}

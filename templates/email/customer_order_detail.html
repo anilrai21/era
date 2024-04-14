@@ -1,0 +1,26 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <style>
+      .main {
+        border-radius: 0.5rem;
+        background-color: #ffe699;
+        padding: 0.5rem;
+        height: 100%;
+      }
+    </style>
+    <link rel="stylesheet" href="{{ static('bulma/css/style.min.css') }}">
+  </head>
+  <body>
+    <div class="main">
+      <h2>Order #{{ id }}</h2>
+      <div>
+        <h4>Name: {{ full_name }}</h4>
+        <h4>Email: {{ email }}</h4>
+        <h4>Phone Number: {{ phone_number }}</h4>
+        <h4>Delivery Address: {{ address }}</h4>
+      </div>
+      <a href='{{ link }}'>Go for More Info</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block title %}Search | Kipa Prints{% endblock %}
+
+{% block content %}
+  <div id="cartData" class="container">
+    <div class="grid-x">
+      <div class="cell">
+        {% include 'ecommerce/included/filter_search.html' %}
+      </div>
+
+      {% if items %}
+        <div class="grid-x grid-margin-x">
+          {% for item in items %}
+            {% include 'ecommerce/included/item_card.html' %}
+          {% endfor %}
+          <div>
+            {% include 'ecommerce/included/items_pagination.html' %}
+          </div>
+        </div>
+      {% else %}
+        {% include 'ecommerce/included/not_found.html' %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

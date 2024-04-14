@@ -1,0 +1,30 @@
+<p class="menu-label">
+  Admin
+</p>
+<div class="menu-list profile_menu">
+  <div>
+    <a {% if selector_name == "listed_item" %} class="selected_item" {% endif %} href="{{ url('profile:listed_item_view') }}">
+      Listed Items
+    </a>
+  </div>
+  <div>
+    <a {% if selector_name == "not_listed_item" %} class="selected_item" {% endif %} href="{{ url('profile:not_listed_item_view') }}">
+      Not Listed Items
+    </a>
+  </div>
+  <div>
+    <a {% if selector_name == "category" %} class="selected_item" {% endif %} href="{{ url('profile:category_view') }}">
+      Categories
+    </a>
+  </div>
+  <div>
+    <a {% if selector_name == "customer_orders" %} class="selected_item" {% endif %} href="{{ url('profile:customer_order_list_view') }}">
+      Customer Orders
+    </a>
+  </div>
+  <div>
+    <a {% if selector_name == "cms" %} class="selected_item" {% endif %} href="{{ url('profile:cms_view') }}">
+      Design
+    </a>
+  </div>
+</div>

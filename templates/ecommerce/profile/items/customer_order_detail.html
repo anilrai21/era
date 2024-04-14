@@ -1,0 +1,37 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block right_content %}
+  <div class="container fluid">
+    <h4>Customer Order #{{ order.id }}</h4>
+
+    <div>Status: {{ order.status }}</div>
+
+    <table class="table order_table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Price Per Item</th>
+          <th>Total Per Item</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for order_item in order.customerorderitem_set.all() %}
+          <tr>
+            <td>{{ order_item.item.name }}</td>
+            <td>{{ order_item.number }}</td>
+            <td>{{ order_item.price }}</td>
+            <td>{{ order_item.number * order_item.price }}</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="order_table_bold">Order Total</td>
+          <td class="order_table_bold">{{ order.total_price }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

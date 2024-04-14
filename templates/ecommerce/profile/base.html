@@ -1,0 +1,26 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block content %}
+  <div class="profile_base">
+    {% if user.is_authenticated and user.is_staff %}
+      {% block staff_profile_content %}
+      {% endblock %}
+    {% elif user.is_authenticated and user.userprofile.email_authenticated %}
+      {% block customer_profile_content %}
+      {% endblock %}
+    {% elif user.is_authenticated and not user.userprofile.email_authenticated %}
+
+      <div class="">
+        <div class="grid-x grid-margin-x">
+          <div class="cell medium-9">
+            <h4>
+              Your email hasn't been verified yet. Please verify with your email.
+              If you haven't got the email yet then please click <a href={{ url('profile:resend_email_confirmation_message_view') }}>here</a>.
+            </h4>
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+  </div>
+{% endblock %}

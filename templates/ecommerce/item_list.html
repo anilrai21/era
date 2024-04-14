@@ -1,0 +1,45 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block title %}Products | Kipa Prints{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div id="cartData" class="grid-x">
+      <div class="cell">
+        {% include 'ecommerce/included/filter_search.html' %}
+      </div>
+
+      {% if items %}
+        {% for item in items %}
+          {% if loop.index % 3 == 1 %}
+            <div class="columns">
+          {% endif %}
+
+          {% with index=loop.index %}
+            {% include 'ecommerce/included/item_card.html' %}
+          {% endwith %}
+
+          {% if loop.index % 3 == 0 or loop.index == loop.length %}
+            </div>
+          {% endif %}
+        {% endfor %}
+        <div>
+          {% include 'ecommerce/included/items_pagination.html' %}
+        </div>
+      {% else %}
+        {% include 'ecommerce/included/not_found.html' %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block js %}
+  <script>
+    "use strict"
+    function changeImage(id, imageUrl){
+      let image = document.querySelector(`#item_${id}`);
+      image.src = imageUrl;
+    }
+  </script>
+{% endblock js %}

@@ -1,0 +1,16 @@
+#!/bin/bash
+# sudo apt-get update && sudo apt-get upgrade -y
+
+sudo rm /etc/nginx/sites-enabled/era
+
+sudo ln -s /etc/nginx/sites-available/era /etc/nginx/sites-enabled/
+
+sudo service nginx stop
+sudo service nginx start
+
+sudo service gunicorn stop
+sudo service gunicorn start
+
+#/home/
+/home/dev/era/env/bin/python manage.py collectstatic --noinput
+

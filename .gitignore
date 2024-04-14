@@ -1,0 +1,112 @@
+env/
+.env
+.env.local.db
+
+temp/
+
+*.class
+*.idea/
+
+src/blog_project/settings/local.py
+.vscode/
+
+include/
+local/
+share/
+pip-selfcheck.json
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test / coverage reports
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Rope
+.ropeproject
+
+# Django stuff:
+*.log
+*.pot
+
+# Sphinx documentation
+docs/_build/
+
+#
+#migrations/
+media
+media_cdn
+static
+static_cdn
+db.sqlite3
+
+# Secret key
+config/settings/secret_keys/*
+
+# REACT
+.DS_STORE
+node_modules
+scripts/flow/*/.flowconfig
+*~
+*.pyc
+.grunt
+_SpecRunner.html
+__benchmarks__
+remote-repo/
+coverage/
+.module-cache
+fixtures/dom/public/react-dom.js
+fixtures/dom/public/react.js
+test/the-files-to-test.generated.js
+*.log*
+chrome-user-data
+*.sublime-project
+*.sublime-workspace
+.idea
+*.iml
+.vscode
+*.swp
+*.swo
+
+react_app/
+
+# JENKINS
+reports/
+
+#MEDIA
+documents/
+
+
+*.ics
+
+notebooks/

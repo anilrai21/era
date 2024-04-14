@@ -1,0 +1,22 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block title %}Order Confirmed | Kipa Prints{% endblock %}
+
+{% block content %}
+    <article class="container">
+        <div class="order_card">
+            <h4>Thank you.</h4>
+
+            <p>Your order has been placed.</p>
+        </div>
+    </article>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        "use strict";
+
+        {# Clear storage when completing order. Clearing the cart. #}
+        localStorage.clear();
+    </script>
+{% endblock js %}

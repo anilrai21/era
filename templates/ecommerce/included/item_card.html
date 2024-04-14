@@ -1,0 +1,43 @@
+<div class="column is-one-third">
+  <div class="kipa_card">
+    <div class="card-image">
+      <figure class="image">
+{#        <a class="" href={{ url('shop:item_detail_view', args=[item.alias]) }}>#}
+          <img id="item_{{ index }}" src="/media/{{ item.main_image_url }}">
+{#        </a>#}
+        <div class="columns is-mobile">
+          {% for image in item.images.all() %}
+            <div class="column is-4">
+              <img
+                class="card_small_image"
+                src="/media/{{ image.image }}"
+                onclick="changeImage({{ index }}, '/media/{{ image.image }}')"
+              >
+            </div>
+          {% endfor %}
+        </div>
+      </figure>
+    </div>
+
+    <div class="card-content">
+      <div class="media">
+        <div class="media-left media-content">
+          <p class="title is-4">{{ item.name }}</p>
+          <p class="subtitle is-6">Rs. {{ item.current_price }}</p>
+          {% for property in item.item_props %}
+            <p class="subtitle">
+              {{ property.property_name__name }} - {{ property.value }}
+            </p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button
+        class="button is-primary is-full"
+        v-on:click="addItemToStorage('{{ item.alias }}', '{{ item.name }}', '{{ item.main_image_url }}', '{{ item.current_price }}')"
+      >
+        Add To Cart
+      </button>
+    </div>
+  </div>
+</div>

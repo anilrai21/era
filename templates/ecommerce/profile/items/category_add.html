@@ -1,0 +1,82 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block right_content %}
+  <div class="columns">
+    <div class="column is-one-fifth">
+    </div>
+    <div class="column is-three-fifths">
+      <h4>Add Category</h4>
+
+      <div class="help_text">
+        Category is the type of item that you want to have within the system
+        Example - Phone Case, T-shirt, etc.
+      </div>
+
+      <form method="post" action="/profile/create-category" enctype="multipart/form-data">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+        <div class="field">
+          Name:
+          {{ category_create_form.name }}
+        </div>
+
+        <div class="field category_fields">
+        </div>
+
+        <div class="field">
+          <input id="active" type="checkbox" name="active" class="switch" checked="checked">
+          <label for="active">Active</label>
+        </div>
+
+        <button class="button is-link add_form_field">
+          Add New Field &nbsp;
+          <span style="font-size:16px; font-weight:bold;">+ </span>
+        </button>
+
+        <button type="submit" class="button is-primary">
+          Add Category
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% include 'ecommerce/included/data_table_js_block.html' %}
+
+  <script>
+    "use strict";
+
+    $(document).ready(function() {
+      const maxFields = 10;
+      let wrapper = $(".category_fields");
+      let add_button = $(".add_form_field");
+
+      let x = 0;
+      $(add_button).click(function(e) {
+        e.preventDefault();
+        if (x < maxFields) {
+          x++;
+          $(wrapper).append(
+            '<div class="field"> Property Name ' + x +
+            '<div class="columns">' +
+            '<div class="column">' +
+            '<input type="text" name="category_property_name' + x + '"/>' +
+            '</div>' +
+            '<div class="column"><a href="#" class="delete_property button is-danger">Delete</a></div>' +
+            '</div>' +
+            '</div>'
+          );
+        } else {
+          alert('You Reached the limits')
+        }
+      });
+
+      $(wrapper).on("click", ".delete_property", function(e) {
+        e.preventDefault();
+        $(this).parent('div').parent('div').parent('div').remove();
+        x--;
+      })
+    });
+  </script>
+{% endblock %}

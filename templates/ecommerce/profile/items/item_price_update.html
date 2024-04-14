@@ -1,0 +1,17 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block right_content %}
+  <div class="block">
+    <h5>Update Sale Price for {{ item.name }}</h5>
+    <form method="post" action="" enctype="multipart/form-data">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+      {{ form.price }}
+      <input type="hidden" name="item" value="{{ item.pk }}"/>
+      <input type="hidden" name="active" value="True" />
+
+      <button type="submit" class="button is-primary">
+        Change
+      </button>
+    </form>
+  </div>
+{% endblock %}

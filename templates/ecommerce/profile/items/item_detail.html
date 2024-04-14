@@ -1,0 +1,313 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block css %}
+  {{super()}}
+  <style>
+    .product-image-gallery {
+      background-color: #fefefe;
+      padding: 1.5rem;
+    }
+
+    .main_image {
+      margin-bottom: 2rem;
+      height: 10rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border: solid 0.1rem;
+      border-radius: 0.1rem;
+      padding: 0.2rem;
+    }
+
+    .product-thumbs a {
+      margin-left: 1rem;
+      margin-right: 1rem;
+      padding: 0 !important;
+    }
+
+    .product-thumbs a img {
+      display: inline-block;
+      max-width: 100%;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.2);
+      line-height: 0;
+      border-radius: 0.2rem;
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .is_active {
+      border: solid 0.1rem;
+    }
+
+    .table {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 0.2rem;
+    }
+
+    .table_heading {
+      font-weight: bold;
+      border-bottom: solid 0.1rem black;
+    }
+  </style>
+{% endblock css %}
+
+{% block right_content %}
+  <div class="columns">
+    <div class="column is-half is-offset-one-quarter">
+      <h4>Update Item</h4>
+
+      <form method="post" action="/profile/create-item" enctype="multipart/form-data">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <div>
+          <div class="field">
+          Name:
+          {{ form.name }}
+          </div>
+          <div class="field">
+          Category:
+          {{ form.category }}
+          </div>
+          <div class="field">
+          SKU:
+          {{ form.sku }}
+          </div>
+          <div class="field">
+          Number of Items:
+          {{ form.number_of_items }}
+          </div>
+          <div class="field">
+          Description:
+          {{ form.description }}
+          </div>
+          <div class="field">
+            Image:
+            {{ form.image_1 }}
+            {{ form.image_2 }}
+            {{ form.image_3 }}
+          </div>
+          <div class="field">
+            Price:
+            {{ form.price }}
+          </div>
+          <div class="field">
+            <input id="active" type="checkbox" name="active" class="switch" checked="checked">
+            <label for="active">Active</label>
+          </div>
+          <div class="field">
+            <button type="submit" class="button is-info">
+              Update item
+            </button>
+          </div>
+
+          <div class="field">
+            <a href="{{ url('profile:profile_item_delete_view', args=[alias]) }}?from_url={{ from_url }}" type="" class="button is-danger">
+              Delete item
+            </a>
+          </div>
+        </div>
+        <div id="category_property_value"></div>
+      </form>
+    </div>
+  </div>
+
+
+
+{% endblock right_content %}
+
+{% block js %}
+  {% include 'ecommerce/included/javascript/axios.html' %}
+
+  <script>
+    "use script";
+
+    const mainImage = document.getElementById('main-product-image');
+
+    axios.get(`/api/shop/item/backend-detail/{{ alias }}`)
+      .then((response) => (
+        response.data
+      )).then((response) => {
+        /* Adding title */
+        const title = document.getElementById('title');
+        title.innerText = response.name;
+
+        const category_name = document.getElementById('category_name');
+        category_name.innerText = `Category: ${response?.category?.name}`;
+
+        const current_price = document.getElementById('current_price');
+        current_price.innerText = `Current Price: Rs. ${response.current_price}`;
+
+        const propertyElement = document.getElementById('category_properties');
+        const properties = response?.category?.property_name;
+
+        for (let i=0, len=properties.length|0; i<len; i=i+1|0) {
+          const individualProperty = document.createElement('div');
+          individualProperty.innerText = `${properties[i]?.name}`
+          propertyElement.appendChild(individualProperty);
+        }
+
+        /* Adding Foundation Orbit Image */
+        const image_orbit = document.getElementById('image_orbit');
+
+        const images = response.images.sort(function(a, b) {
+          return parseFloat(a.order) - parseFloat(b.order);
+        });
+
+        images.map((image, key) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.classList.add('small_image_anchor');
+
+          const img = document.createElement('img');
+          img.classList.add('image');
+          img.src = image.image;
+          img.alt = "";
+
+          if (key === 0) {
+            /**
+             *  Setting first main image and active small image
+             */
+            mainImage.src = image.image;
+            img.classList.add('is_active');
+          }
+
+          a.appendChild(img);
+          li.appendChild(a);
+          image_orbit.appendChild(li);
+        })
+
+      }).then(() => {
+        $('.small_image_anchor').on('click', function() {
+          const image = this.getElementsByTagName('img')[0];
+          setMainImage(image);
+          setActive(image);
+        })
+      })
+
+    function setMainImage(image) {
+      /**
+       *  Set the Large Main Image based on the smaller clicked image
+       */
+      if (image) {
+        mainImage.src = image.src;
+      }
+    }
+    function setActive(currentElement) {
+      /**
+       *  Set new image as active
+       */
+      removePreviousActive()
+      currentElement.classList.add('is_active')
+    }
+
+    function removePreviousActive() {
+      /**
+       * Remove previous images that have `is_active` class.
+       * @type {HTMLCollectionOf<Element>}
+       */
+      const currentActiveImages = document.getElementsByClassName('is_active');
+
+      for (let i=0, len=currentActiveImages.length|0; i<len; i=i+1|0) {
+        currentActiveImages[i].classList.remove('is_active');
+      }
+    }
+
+    // Purchases
+    const purchasesDiv = document.getElementById("purchases");
+    const prevButton = document.getElementById('prev_button');
+    const nextButton = document.getElementById('next_button');
+
+    function setTabularList(apiUrl, element, prev, next) {
+      axios.get(apiUrl)
+        .then((response) => (
+          response.data
+        ))
+        .then((response) => {
+          const results = response.results;
+          results.map((result) => {
+            const dataElement = document.createElement('li');
+            dataElement.classList.add('grid-x');
+
+            const date = document.createElement('div');
+            date.classList.add('cell');
+            date.classList.add('small-3');
+            date.classList.add('medium-3');
+            date.classList.add('large-3');
+            date.innerText = new Date(result.created).toDateString();
+
+            const number = document.createElement('div');
+            number.classList.add('cell');
+            number.classList.add('small-3');
+            number.classList.add('medium-3');
+            number.classList.add('large-3');
+            number.innerText = result.number;
+
+            const totalPrice = document.createElement('div');
+            totalPrice.classList.add('cell');
+            totalPrice.classList.add('small-3');
+            totalPrice.classList.add('medium-3');
+            totalPrice.classList.add('large-3');
+            totalPrice.innerText = result.price;
+
+            const perItemPrice = document.createElement('div');
+            perItemPrice.classList.add('cell');
+            perItemPrice.classList.add('small-3');
+            perItemPrice.classList.add('medium-3');
+            perItemPrice.classList.add('medium-3');
+            perItemPrice.classList.add('large-3');
+            perItemPrice.innerText = result.price / result.number;
+
+            dataElement.appendChild(date);
+            dataElement.appendChild(number);
+            dataElement.appendChild(totalPrice);
+            dataElement.appendChild(perItemPrice);
+
+            purchasesDiv.appendChild(dataElement);
+          })
+
+          if (response.previous) {
+            prev.classList.remove('disabled');
+            prev.onclick = function () {
+              removeDataDiv(element);
+              setTabularList(response.previous, element, prev, next);
+            };
+          } else {
+            prev.classList.add('disabled');
+          }
+
+          if (response.next) {
+            next.classList.remove('disabled');
+            next.onclick = function () {
+              removeDataDiv(element);
+              setTabularList(response.next, element, prev, next);
+            };
+          } else {
+            next.classList.add('disabled');
+          }
+
+          /* TODO: Add page buttons */
+          /*const pagination = 1;
+          if (response.count > pagination) {
+            const numberOfTablePages = Math.ceil(response.count / pagination);
+
+
+            for (let i=0; i < numberOfTablePages; i++) {
+              const
+            }
+          }*/
+        })
+    }
+
+    function removeDataDiv(element) {
+      const dataElement = element.getElementsByTagName('li');
+
+      for (let i=0, len=dataElement.length|0; i<len; i=i+1|0) {
+        dataElement[i].remove();
+      }
+    }
+
+    setTabularList('/api/shop/purchase/backend-list', purchasesDiv, prevButton, nextButton);
+    {#setTabularList('/api/shop/orders/backend-list', )#}
+  </script>1
+{% endblock js %}

@@ -1,0 +1,80 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block title %}Place Order | Kipa Prints{% endblock %}
+
+{% block content %}
+  <article class="container">
+    <div id="cartData" class="order_card">
+      <h4>Order Details</h4>
+
+      <div id="cartList">
+      </div>
+
+      <div class="columns" v-for="item in cartItemList" :key="item.alias">
+        <div class="column">
+          <img class="cartImage" v-bind:src="'/media/' + [[ item.imageUrl ]]" v-bind:alt="[[ item.alias ]]"/>
+          [[ item.name ]]
+        </div>
+        <div class="column">
+          <div class="columns">
+            <div class="column">Qty: [[ item.quantity ]]</div>
+            <div class="column is-gapless">
+              <button class="button is-primary"
+                      v-on:click="addItemToStorage([[ item.alias ]], [[ item.name]], [[ item.imageUrl ]], [[ item.price ]])">
+                +
+              </button>
+              <button class="button is-danger"
+                      v-on:click="subtractItemFromStorage([[ item.alias ]], [[ item.name]], [[ item.imageUrl ]], [[ item.price ]])">
+                -
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="column">Price: [[ item.price ]]</div>
+      </div>
+
+      <div class="cartTotalDetail">
+        <strike v-if="discountAmount && discountType">Initial Price: [[ totalCostOfCart ]]</strike>
+        <div v-else>Total Price: [[ totalCostOfCart ]]</div>
+        <div v-if="discountAmount && discountType">Total Price after Discount: [[ totalCostOfCartAfterDiscount ]]</div>
+      </div>
+
+      {% if not customer_order %}
+      <div class="columns is-mobile is-multiline">
+        <div class="column" v-if="this.voucherButton">
+          <div class="">
+            <input v-model="code"/>
+          </div>
+          <div class="pt-2">
+            <button class="button is-primary" v-on:click="getCode()">
+              Submit
+            </button>
+            <button class="button is-danger" v-on:click="toggleVoucherButton()">
+              Close
+            </button>
+          </div>
+        </div>
+        <div class="column" v-else>
+          <button class="button is-primary is-3" v-on:click="toggleVoucherButton()">
+            Enter Voucher
+          </button>
+        </div>
+      </div>
+    {% endif %}
+
+      {% if order_form %}
+        {% include 'ecommerce/orders/included/input_order_form.html' %}
+      {% endif %}
+
+      {% if customer_order %}
+        {% include 'ecommerce/orders/included/order_details_form.html' %}
+      {% endif %}
+    </div>
+  </article>
+{% endblock content %}
+
+{% block js %}
+  <script>
+
+  </script>
+{% endblock js %}

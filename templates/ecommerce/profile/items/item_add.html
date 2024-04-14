@@ -1,0 +1,100 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block right_content %}
+  <div class="columns">
+    <div class="column is-half is-offset-one-quarter">
+      <h4>Add Items</h4>
+
+      <form method="post" action="/profile/create-item" enctype="multipart/form-data">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <div>
+          <div class="field">
+          Name:
+          {{ item_create_form.name }}
+          </div>
+          <div class="field">
+          Category:
+          {{ item_create_form.category }}
+          </div>
+          <div class="field">
+          SKU:
+          {{ item_create_form.sku }}
+          </div>
+          <div class="field">
+          Number of Items:
+          {{ item_create_form.number_of_items }}
+          </div>
+          <div class="field">
+          Description:
+          {{ item_create_form.description }}
+          </div>
+          <div class="field">
+            Image:
+            {{ item_create_form.image_1 }}
+            {{ item_create_form.image_2 }}
+            {{ item_create_form.image_3 }}
+          </div>
+          <div class="field">
+            Price:
+            {{ item_create_form.price }}
+          </div>
+          <div class="field">
+            <input id="active" type="checkbox" name="active" class="switch" checked="checked">
+            <label for="active">Active</label>
+          </div>
+          <div class="field">
+            <button type="submit" class="button is-primary">
+              Add item
+            </button>
+          </div>
+        </div>
+        <div id="category_property_value"></div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+{% block js %}
+  {% include 'ecommerce/included/data_table_js_block.html' %}
+
+  <script>
+    "use strict";
+
+    $("#id_category").change(function() {
+      let id = Number($(this).val());
+      let category_property_value = document
+              .getElementById("category_property_value");
+
+      while (category_property_value.firstChild) {
+        category_property_value.removeChild(
+          category_property_value.lastChild
+        );
+      }
+
+      if(id) {
+        axios.get(`/api/shop/category/${id}`)
+          .then((response) => {
+            let data = response.data;
+            let properties = data['property_name'];
+
+            for (let i=0; i < properties.length; i++) {
+              const propertyLabel = properties[i].name;
+              const propertyName = `property__${propertyLabel}`;
+
+              let label = document.createTextNode(propertyLabel);
+
+              category_property_value.appendChild(label);
+
+              let field = document.createElement("input");
+              field.setAttribute('type', 'text');
+              field.setAttribute('name', propertyName);
+
+              category_property_value.appendChild(field);
+            }
+          })
+      }
+    })
+  </script>
+{% endblock %}

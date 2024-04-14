@@ -1,0 +1,47 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block right_content %}
+    <div class="container fluid">
+        <div class="grid-x grid-padding-x align-justify">
+            <div class="cell small-10">
+                <h3>Customer Orders</h3>
+            </div>
+        </div>
+    </div>
+
+    <table id="customer_orders_list">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Total Price</th>
+                <th>Bill</th>
+                <th>Address</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+    </table>
+{% endblock %}
+
+{% block js %}
+    {% include 'ecommerce/included/data_table_js_block.html' %}
+
+    <script>
+        "use strict";
+
+        $('#customer_orders_list').DataTable({
+            ajax: {
+                url: "/api/shop/customer-order/list",
+                dataSrc: ""
+            },
+            columns: [
+                { data: "customer" },
+                { data: "total_price" },
+                { data: "bill" },
+                { data: "address" },
+                { data: "status" },
+            ],
+            select: true,
+        });
+    </script>
+
+{% endblock %}

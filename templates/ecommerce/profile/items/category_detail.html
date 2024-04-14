@@ -1,0 +1,23 @@
+{% extends 'ecommerce/profile/profile.html' %}
+
+{% block right_content %}
+  <div class="container fluid">
+    <h4>{{ category.name }}</h4>
+
+    <h5>Properties</h5>
+    {% for property in category.property_name.all() %}
+      <div class="columns">
+        <div class="column">
+          <p>{{ property.name }}</p>
+        </div>
+      </div>
+    {% endfor %}
+
+    <a
+        class="button is-danger"
+        href="{{ url('profile:category_delete_view', args=[category.alias]) }}"
+    >
+      Delete {{ category.name }}
+    </a>
+  </div>
+{% endblock %}

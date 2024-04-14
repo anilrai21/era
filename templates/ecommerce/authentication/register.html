@@ -1,0 +1,48 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block title %}
+  Register | Kipa Prints
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter">
+
+        <form class="form" method="post" style="background-color: #0088d1">
+          <h2>Register</h2>
+          {% if form.errors %}
+            <div class="callout alert-callout-border alert">
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <div>
+                    <strong> * {{ error|escape }}</strong>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          Username
+          {{ form.username }}
+          First Name
+          {{ form.first_name }}
+          Last Name
+          {{ form.last_name }}
+          Email
+          {{ form.email }}
+          Password
+          {{ form.password1 }}
+          Re-Password
+          {{ form.password2 }}
+          <div style="margin-top: 1rem;">
+            <button type="submit" class="button is-primary">
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

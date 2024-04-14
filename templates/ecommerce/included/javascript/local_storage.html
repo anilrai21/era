@@ -1,0 +1,193 @@
+{% include 'ecommerce/included/javascript/axios.html' %}
+
+<script>
+  "use strict";
+
+  const getCartItemObject = () => {
+    return JSON.parse(localStorage.getItem('items') || '{}');
+  }
+
+  const addCartItemCount = () => {
+    setCartItemCountToStorage(getCartItemCountFromStorage() + 1);
+  }
+
+  const subtractCartItemCount = () => {
+    setCartItemCountToStorage(getCartItemCountFromStorage() - 1);
+  }
+
+  const setCartItemCountToStorage = (count) => {
+    localStorage.setItem('cartItemCount', count);
+  }
+
+  const getCartItemCountFromStorage = () => {
+    return localStorage.getItem('cartItemCount')
+        ? parseInt(localStorage.getItem('cartItemCount'))
+        : 0;
+  }
+
+  const discountCode = "{{ discount_code }}" || null;
+
+  const cartApp = new Vue({
+    el: '#cartData',
+    delimiters: ["[[", "]]"],
+    data: {
+      cartItemCountText: '',
+      cartItemList: [],
+      cartItemSerialized: {cartItems: ""},
+      totalCostOfCart: 0,
+      totalCostOfCartAfterDiscount: 0,
+      tableData: {},
+      image: "",
+      displayItemAdded: false,
+      discountAmount: 0,
+      discountType: null,
+      voucherButton: false,
+      code: "",
+    },
+    mounted() {
+      this.setCarItemCountText();
+      this.setCartItemList();
+      this.calculateTotalCostOfCart();
+    },
+    methods: {
+      setCartItemList: function () {
+        const cartItemObject = getCartItemObject();
+        const data = Object.keys(cartItemObject).map((key) => ({alias: key, ...cartItemObject[key]}))
+        this.cartItemList = data;
+        this.setCartItemSerialized(data);
+      },
+      calculateTotalCostOfCart: function () {
+        const cartItemObject = getCartItemObject();
+        let total = 0;
+        for (const key in cartItemObject) {
+          total = total + (cartItemObject[key]['price'] - this.discountAmount) * cartItemObject[key]['quantity'];
+        }
+        this.totalCostOfCart = total;
+      },
+      setCartItemSerialized: function (data) {
+        this.cartItemSerialized = {cartItems: JSON.stringify(data)}
+      },
+      setCarItemCountText: function () {
+        const cartItemCount = getCartItemCountFromStorage()
+        this.cartItemCountText = cartItemCount ? ` (${cartItemCount})` : '';
+        const cartText = document.getElementById("cartText");
+        cartText.innerText = `Cart ${this.cartItemCountText}`;
+      },
+      addItemToStorage: function (alias, name, imageUrl, price) {
+        /***
+         * Add `alias` as a value the local storage for a key `items`.
+         */
+        if ("localStorage" in window) {
+          const items = localStorage.getItem('items')
+              ? JSON.parse(localStorage.getItem('items'))
+              : {};
+
+          let itemObject = {};
+
+          let item = items[alias];
+
+          if (item)
+            itemObject[alias] = {...item, ...{quantity: item.quantity + 1}};
+          else
+            itemObject[alias] = {...item, ...{quantity: 1, name: name, imageUrl: imageUrl, price: price}};
+
+          localStorage.setItem(
+              'items',
+              JSON.stringify({...items, ...itemObject})
+          );
+
+          addCartItemCount();
+          this.setCarItemCountText();
+          this.setCartItemList();
+          this.calculateTotalCostOfCart();
+          this.displayItemAddedMessage();
+        } else {
+          alert("no localStorage in window");
+        }
+      },
+      subtractItemFromStorage: function (alias, name, imageUrl, price) {
+        /***
+         * Add `alias` as a value the local storage for a key `items`.
+         */
+        if ("localStorage" in window) {
+          const items = localStorage.getItem('items')
+              ? JSON.parse(localStorage.getItem('items'))
+              : {};
+
+          let item = items[alias];
+
+          if (item.quantity === 1) {
+            delete items[alias];
+
+            localStorage.setItem(
+                'items',
+                JSON.stringify({...items})
+            );
+          } else {
+            let itemObject = {};
+
+            itemObject[alias] = {...item, ...{quantity: item.quantity - 1}};
+            localStorage.setItem(
+                'items',
+                JSON.stringify({...items, ...itemObject})
+            );
+          }
+
+          subtractCartItemCount();
+          this.setCarItemCountText();
+          this.setCartItemList();
+          this.calculateTotalCostOfCart();
+        } else {
+          alert("no localStorage in window");
+        }
+      },
+      setImage: function (image) {
+        {#this.image = image;#}
+      },
+      displayItemAddedMessage: function () {
+        const itemAddedMessage = document.getElementById('itemAddedMessage');
+        itemAddedMessage.style.display = 'block';
+
+        setInterval(() => {
+          itemAddedMessage.style.display = 'none';
+        }, 2000);
+      },
+      calculateDiscountAmount: function () {
+        if (this.discountType === "flat") {
+          return this.discountAmount;
+        } else {
+          return this.totalCostOfCart * this.discountAmount / 100;
+        }
+      },
+      calculateTotalCostOfCartAfterDiscount: function () {
+        this.totalCostOfCartAfterDiscount = this.totalCostOfCart - this.calculateDiscountAmount();
+      },
+      toggleVoucherButton: function () {
+        this.voucherButton = !this.voucherButton
+      },
+      getCode: function () {
+        this.resetDiscount();
+
+        fetch(`api/shop/code/retrieve/${this.code}`)
+            .then((response) => (response.json()))
+            .then((response) => {
+              this.discountAmount = response?.amount;
+              this.discountType = response?.type;
+              if (this.discountAmount === undefined && this.discountType === undefined) {
+                alert("Invalid Voucher Code");
+              }
+            })
+            .then(() => {
+              this.calculateTotalCostOfCartAfterDiscount();
+            })
+            .catch(() => {
+              alert("Error in Voucher Code.");
+            })
+      },
+      resetDiscount: function () {
+        this.discountAmount = 0;
+        this.discountType = null;
+      }
+    },
+  })
+</script>

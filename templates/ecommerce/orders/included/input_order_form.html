@@ -1,0 +1,69 @@
+<form
+    class="form"
+    method="POST"
+    action="{{ url('shop:place_order_view') }}"
+    style="background-color: #0088d1"
+>
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+  <div class="pt-1 pb-1">
+    <input
+      type="hidden"
+      name="item_list"
+      v-model="cartItemSerialized.cartItems"
+    />
+
+    <input type="hidden" name="discountAmount" v-model="discountAmount" />
+    <input type="hidden" name="discountType" v-model="discountType" />
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <div class="pr-1">
+        <div>
+          <h5>Personal Info</h5>
+        </div>
+
+        <div>
+          First Name:
+          {{ order_form.first_name }}
+        </div>
+        <div>
+          Last Name:
+          {{ order_form.last_name }}
+        </div>
+        <div>
+          Email:
+          {{ order_form.email }}
+        </div>
+        <div>
+          Phone Number:
+          {{ order_form.phone_number }}
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="">
+        <h5>Address</h5>
+        <div>
+          Street/Tole:
+          {{ order_form.address1 }}
+        </div>
+        <div>
+          Additional Info on Address:
+          {{ order_form.address2 }}
+        </div>
+        <div>
+          City:
+          {{ order_form.city }}
+        </div>
+        <div>
+          Province:
+          {{ order_form.province }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="button is-primary">Proceed</button>
+</form>
